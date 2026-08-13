@@ -1,111 +1,156 @@
-# 📚 سامانه مدیریت کتابخانه دانشگاه
+# 📚 University Library Management System
 
-پروژهٔ درس **مهندسی اینترنت** — مدیریت کتاب‌ها، کاربران، رزرو، امانت و بازگشت، با Spring Boot، React و MySQL.
+A full-stack university library management system built with **Spring Boot**, **React**, and **MySQL**.
 
 ![Java](https://img.shields.io/badge/Java-17-orange?logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-brightgreen?logo=springboot)
 ![React](https://img.shields.io/badge/React-18-149eca?logo=react)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite)
-![MySQL](https://img.shields.io/badge/MySQL-Database-blue?logo=mysql)
+![MySQL](https://img.shields.io/badge/MySQL-8-blue?logo=mysql)
+![Maven](https://img.shields.io/badge/Maven-Build%20Tool-red?logo=apachemaven)
 
-## اعضای گروه
+## Overview
 
-- امیر حسین بیات
-- محمدرضا صادقی
-- مهدی اکبری
+This project provides separate workflows for library users and administrators.
 
-## ✨ معرفی
+Users can register, log in, browse and search books, submit reservation requests, cancel pending reservations, and view their reservations and active loans.
 
-کاربران می‌توانند ثبت‌نام و وارد سامانه شوند، کتاب‌ها را جست‌وجو و فیلتر کنند، درخواست رزرو بدهند و وضعیت رزروها و امانت‌های خود را ببینند.
+Administrators can manage books, authors, and categories, review reservations, register loans, confirm returns, and view library statistics.
 
-مدیر سامانه می‌تواند کتاب‌ها، نویسندگان و دسته‌بندی‌ها را با CRUD کامل مدیریت کند، رزروها را تأیید یا رد کند، امانت جدید ثبت کند و بازگشت کتاب را ثبت کند.
+The backend exposes a REST API and follows a layered architecture. The frontend is a React single-page application that communicates with the backend through Axios and JSON.
 
-بک‌اند به‌صورت REST API با Spring Boot نوشته شده و فرانت‌اند به‌صورت جدا با React و Vite ساخته شده است.
+## Features
 
-## 🧩 ماژول‌ها
+### User Features
 
-| ماژول | کاربرد |
-|---|---|
-| 🔐 احراز هویت | ثبت‌نام، ورود، خروج، هش رمز با BCrypt و احراز هویت مبتنی بر Session |
-| 👤 کاربران | پروفایل، نقش و مدیریت دسترسی کاربر/مدیر |
-| 📚 کتاب‌ها | فهرست، جست‌وجو، فیلتر، جزئیات، موجودی و CRUD کامل |
-| ✍️ نویسندگان | ایجاد، مشاهده، ویرایش و حذف |
-| 🗂️ دسته‌بندی‌ها | ایجاد، مشاهده، ویرایش و حذف |
-| 📝 رزرو | ثبت رزرو توسط کاربر و تأیید/رد توسط مدیر |
-| 📖 امانت | ساخت خودکار امانت پس از تأیید رزرو و کاهش موجودی |
-| ✅ بازگشت | ثبت بازگشت توسط مدیر و افزایش موجودی |
-| 🛡️ کنترل دسترسی | Interceptor برای مسیرهای نیازمند ورود و مسیرهای مخصوص مدیر |
-| 🖥️ داشبورد مدیر | آمار کاربران، کتاب‌ها، امانت‌های فعال و رزروهای در انتظار |
+- Registration, login, and logout
+- Session-based authentication
+- Browse, search, and filter books
+- View book details and availability
+- Submit and cancel reservations
+- View reservation status
+- View borrowed books and due dates
+- View profile information
 
-## 🔄 جریان رزرو و امانت
+### Administrator Features
 
-```text
-کاربر کتاب را رزرو می‌کند
-        ↓
-Reservation با وضعیت PENDING ساخته می‌شود
-        ↓
-مدیر رزرو را تأیید می‌کند
-        ↓
-Borrow با سررسید ۱۴ روزه ساخته می‌شود
-        ↓
-موجودی کتاب یک واحد کم می‌شود
-        ↓
-مدیر بازگشت را ثبت می‌کند
-        ↓
-موجودی کتاب یک واحد زیاد می‌شود
-```
+- Dashboard statistics
+- Full CRUD operations for books
+- Full CRUD operations for authors
+- Full CRUD operations for categories
+- View registered users
+- Approve or reject reservations
+- Automatically create a loan after approving a reservation
+- Register loans manually
+- Confirm returned books
+- Manage book inventory
 
-## 🛠️ تکنولوژی‌ها
+## Tech Stack
 
-**Backend:** Java 17، Spring Boot 3.3، Spring MVC REST، Spring Data JPA، Hibernate، Jakarta Validation، BCrypt، Maven
-
-**Frontend:** React 18، React Router، Axios، Vite 5، Bootstrap 5 RTL، Bootstrap Icons
-
-**Database:** MySQL (و H2 فقط برای تست خودکار)
-
-## 🏗️ معماری
-
-```text
-React Component
-      ↓ Axios (REST + JSON)
-Spring Boot Controller  (/api/...)
-      ↓
-Service
-      ↓
-Repository (Spring Data JPA)
-      ↓
-MySQL
-```
-
-احراز هویت مبتنی بر Session است: ورود با `POST /api/auth/login` بررسی می‌شود، شناسه و نقش کاربر در `HttpSession` ذخیره می‌شود و مرورگر کوکی `JSESSIONID` را برای درخواست‌های بعدی نگه می‌دارد. فایل اتصال فرانت به بک‌اند: `frontend/src/lib/api.js`.
-
-## 🗃️ موجودیت‌های اصلی
-
-`User`، `Book`، `Author`، `Category`، `Reservation`، `Borrow`
-
-- هر `Book` به یک `Author` و یک `Category` متصل است.
-- هر `Reservation` و هر `Borrow` به یک `User` و یک `Book` متصل است.
-
-## 🚀 اجرای پروژه
-
-### پیش‌نیازها
+### Backend
 
 - Java 17
-- Maven 3.9+
-- Node.js 18+
+- Spring Boot 3.3
+- Spring MVC REST
+- Spring Data JPA
+- Hibernate
+- Jakarta Validation
+- BCrypt password hashing
+- Maven
+
+### Frontend
+
+- React 18
+- React Router 6
+- Axios
+- Vite 5
+- Bootstrap 5 RTL
+- Bootstrap Icons
+
+### Database and Testing
+
+- MySQL 8
+- H2 test database
+- Spring Boot Test
+
+## Architecture
+
+```text
+React Components
+       |
+       | Axios / REST / JSON
+       v
+Spring Boot Controllers
+       |
+       v
+Services
+       |
+       v
+Spring Data JPA Repositories
+       |
+       v
+MySQL Database
+```
+
+Authentication is session-based. After a successful login, the server stores the user's ID and role in `HttpSession`. The browser sends the `JSESSIONID` cookie with later API requests.
+
+## Main Entities
+
+- `User`
+- `Book`
+- `Author`
+- `Category`
+- `Reservation`
+- `Borrow`
+
+Each book belongs to an author and a category. Reservations and loans connect a user to a book.
+
+## Reservation and Borrowing Flow
+
+```text
+User submits a reservation
+        |
+        v
+Reservation is created with PENDING status
+        |
+        v
+Administrator approves the reservation
+        |
+        v
+A Borrow record is created automatically
+        |
+        v
+Book quantity is decreased by one
+        |
+        v
+Administrator confirms the return
+        |
+        v
+Borrow is closed and book quantity is restored
+```
+
+## Getting Started
+
+### Prerequisites
+
+Install the following tools before running the project:
+
+- Java 17
+- Maven 3.9 or later
+- Node.js 18 or later
 - MySQL 8
 - Git
 
-### ۱. دریافت پروژه
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/hamidshaikhy/university-library-management-system-project.git
 cd university-library-management-system-project
 ```
 
-### ۲. ساخت دیتابیس
+### 2. Create the Database
 
-فایل `database.sql` را اجرا کنید یا دستور زیر را در MySQL بزنید:
+Run the included `database.sql` file in MySQL Workbench, or execute:
 
 ```sql
 CREATE DATABASE university_library
@@ -113,35 +158,45 @@ CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 ```
 
-### ۳. تنظیم نام کاربری و رمز MySQL
+Hibernate creates and updates the project tables automatically when the backend starts.
 
-پروژه رمز دیتابیس را از Environment Variable می‌خواند تا داخل GitHub ذخیره نشود.
+### 3. Configure MySQL Credentials
 
-Windows PowerShell:
+Set your MySQL username and password as environment variables before starting the backend.
+
+#### Windows PowerShell
 
 ```powershell
 $env:DB_USERNAME="root"
 $env:DB_PASSWORD="YOUR_MYSQL_PASSWORD"
 ```
 
-Linux / macOS:
+#### Linux / macOS
 
 ```bash
 export DB_USERNAME=root
 export DB_PASSWORD=YOUR_MYSQL_PASSWORD
 ```
 
-### ۴. اجرای بک‌اند
+Run the backend from the same terminal in which these variables were set.
+
+### 4. Run the Backend
+
+From the project root directory:
 
 ```bash
 mvn spring-boot:run
 ```
 
-بک‌اند روی `http://localhost:8080` بالا می‌آید.
+The backend and REST API will run at:
 
-### ۵. اجرای فرانت‌اند
+```text
+http://localhost:8081
+```
 
-در ترمینال دوم:
+### 5. Run the React Frontend
+
+Open a second terminal:
 
 ```bash
 cd frontend
@@ -149,15 +204,77 @@ npm install
 npm run dev
 ```
 
-سایت را باز کنید:
+Open the application at:
 
 ```text
 http://localhost:5173
 ```
 
-در حالت توسعه، Vite درخواست‌های `/api` را با Proxy به `http://localhost:8080` می‌فرستد، پس نیازی به تنظیم CORS نیست.
+During development, Vite proxies all `/api` requests to `http://localhost:8081`.
 
-## 📦 اجرای نسخهٔ یکپارچه (Build)
+## Default Accounts
+
+Sample accounts are created automatically if they do not already exist.
+
+| Role | Email | Password |
+|---|---|---|
+| Administrator | `admin@library.local` | `Admin123` |
+| User | `user@library.local` | `User123` |
+
+These accounts are intended only for local testing and project demonstration.
+
+## Project Structure
+
+```text
+university-library-management-system-project/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── lib/
+│   │   ├── pages/
+│   │   ├── styles/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── vite.config.js
+├── src/
+│   ├── main/java/com/example/library/
+│   │   ├── config/
+│   │   ├── controller/
+│   │   ├── entity/
+│   │   ├── repository/
+│   │   └── service/
+│   ├── main/resources/
+│   │   └── application.properties
+│   └── test/
+├── database.sql
+├── pom.xml
+├── .gitignore
+└── README.md
+```
+
+## Testing
+
+Run the backend tests from the project root:
+
+```bash
+mvn test
+```
+
+The API integration tests use an H2 database and do not modify the main MySQL database.
+
+To verify the frontend production build:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+## Production Build
+
+Build the React frontend first, then package the Spring Boot application:
 
 ```bash
 cd frontend
@@ -165,85 +282,22 @@ npm install
 npm run build
 cd ..
 mvn clean package
+```
+
+Run the generated application:
+
+```bash
 java -jar target/university-library-1.0.0.jar
 ```
 
-Maven پوشهٔ `frontend/dist` را داخل فایل JAR قرار می‌دهد و در این حالت React و API هر دو از `http://localhost:8080` سرو می‌شوند.
-
-## 🔑 حساب‌های آزمایشی
-
-| نقش | ایمیل | رمز |
-|---|---|---|
-| مدیر | `admin@library.local` | `Admin123` |
-| کاربر | `user@library.local` | `User123` |
-
-> این حساب‌ها فقط برای تست محلی و ارائه ساخته می‌شوند.
-
-## 📁 ساختار پروژه
+The React application and REST API will both be available at:
 
 ```text
-university-library-management-system-project/
-├── frontend/
-│   ├── src/
-│   │   ├── components/       # Layout و اجزای مشترک
-│   │   ├── context/          # وضعیت ورود کاربر
-│   │   ├── lib/              # Axios و مدیریت خطا
-│   │   ├── pages/            # صفحات کاربر و مدیر
-│   │   ├── styles/           # ظاهر اصلی سایت
-│   │   ├── App.jsx           # Routeهای React
-│   │   └── main.jsx          # نقطه شروع React
-│   ├── package.json
-│   └── vite.config.js
-├── src/main/java/com/example/library/
-│   ├── config/               # Session Interceptor و داده نمونه
-│   ├── controller/api/       # REST Controller، DTO و Error Handler
-│   ├── entity/               # موجودیت‌های دیتابیس
-│   ├── repository/           # Spring Data JPA
-│   └── service/              # منطق اصلی برنامه
-├── src/main/resources/
-│   └── application.properties
-├── database.sql
-├── pom.xml
-└── .gitignore
+http://localhost:8081
 ```
 
-## 👨‍💼 قابلیت‌های مدیر
+## Notes
 
-- داشبورد آماری
-- CRUD کتاب‌ها، نویسندگان و دسته‌بندی‌ها
-- مشاهدهٔ کاربران
-- تأیید یا رد رزرو
-- ساخت خودکار امانت پس از تأیید رزرو
-- ثبت دستی امانت
-- ثبت بازگشت و افزایش موجودی کتاب
-
-## 👤 قابلیت‌های کاربر
-
-- ثبت‌نام، ورود و خروج
-- مشاهدهٔ پروفایل
-- فهرست، جست‌وجو و فیلتر کتاب‌ها
-- مشاهدهٔ جزئیات کتاب
-- ثبت و لغو رزرو
-- مشاهدهٔ وضعیت رزروها
-- مشاهدهٔ امانت‌ها و تاریخ سررسید
-
-## 🧪 تست
-
-```bash
-mvn test
-```
-
-تست‌های API ورود، دسترسی عادی و دسترسی مدیر در `ApiIntegrationTests.java` قرار دارند و از دیتابیس موقت H2 استفاده می‌کنند.
-
-تست build فرانت:
-
-```bash
-cd frontend
-npm run build
-```
-
-## ⚠️ نکات
-
-- تمام کاربران، کتاب‌ها و حساب‌های نمونه صرفاً داده‌های آزمایشی هستند.
-- رمز واقعی دیتابیس نباید داخل GitHub commit شود.
-- پوشهٔ `target/` و `frontend/node_modules` باید همیشه در `.gitignore` باقی بمانند.
+- Do not commit real database passwords or private credentials.
+- Keep `target/`, `frontend/dist/`, and `frontend/node_modules/` out of Git.
+- The included accounts and initial records are sample data for local use.
